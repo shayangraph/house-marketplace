@@ -5,8 +5,8 @@ import Explore from "./pages/Explore";
 import ForgotPassword from "./pages/ForgotPassword";
 import Offer from "./pages/Offer";
 import Profile from "./pages/Profile";
-import Signin from "./pages/Signin";
-import Signup from "./pages/Signup";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 const App = () => {
   return (
@@ -16,9 +16,9 @@ const App = () => {
           <Route path="/" element={<Explore />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/offers" element={<Offer />} />
-          <Route path="/profile" element={<Signin />} />
-          <Route path="/sign-in" element={<Signin />} />
-          <Route path="/sign-up" element={<Signup />} />
+          <Route path="/profile" element={<SignIn />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
         </Routes>
         <Navbar />
       </Router>
