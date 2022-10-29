@@ -59,7 +59,7 @@ const Profile = () => {
         <div className="profileDetailsHeader">
           <p className="profileDetailsText">Personal Details</p>
           <p
-            className="changePersonalDetails"
+            className="changePersonalDetailsText"
             onClick={() => {
               changeDetails && onSubmit();
               setChangeDetails((prevState) => !prevState);
@@ -73,7 +73,7 @@ const Profile = () => {
             <input
               type="text"
               id="name"
-              className={!changeDetails ? "profileName" : "ProfileNameActive"}
+              className={!changeDetails ? "profileName" : "profileNameActive"}
               disabled={!changeDetails}
               value={name}
               onChange={onChange}
