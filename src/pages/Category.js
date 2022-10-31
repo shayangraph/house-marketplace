@@ -12,6 +12,7 @@ import {
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import ListingItem from "../components/ListingItem";
 
 const Category = () => {
   const [listings, setListings] = useState(null);
@@ -38,16 +39,13 @@ const Category = () => {
 
         const listings = [];
         querySnap.forEach((doc) => {
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+          return listings.push({ id: doc.id, data: doc.data() });
         });
 
         setListings(listings);
-        setListings(false);
+        setLoading(false);
       } catch (error) {
-        toast.error("could not fetch listings");
+        toast.error("could not fetch data");
       }
     };
     fetchListings();
@@ -65,12 +63,16 @@ const Category = () => {
 
       {loading ? (
         <Spinner />
-      ) : listings && listings.length >= 0 ? (
+      ) : listings && listings.length > 0 ? (
         <>
           <main>
             <ul className="categoryListings">
-              {listings.map((listings) => {
-                <h3 key={listings.id}>{listings.data.name}</h3>;
+              {listings.map((listing) => {
+                <ListingItem
+                  listing={listing.data}
+                  id={listing.id}
+                  key={listing.id}
+                />;
               })}
             </ul>
           </main>
