@@ -1,13 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase.config";
 import { useNavigate } from "react-router";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 const CreateListing = () => {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [formdata, setFormdata] = useState({
+  const [formData, setformData] = useState({
     type: "rent",
     name: "",
     bedrooms: 1,
@@ -37,7 +46,7 @@ const CreateListing = () => {
     images,
     latitude,
     longitude,
-  } = formdata;
+  } = formData;
 
   const auth = getAuth();
   const navigate = useNavigate();
@@ -47,7 +56,7 @@ const CreateListing = () => {
     if (isMounted) {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          setFormdata({ ...formdata, userRef: user.uid });
+          setformData({ ...formData, userRef: user.uid });
         } else {
           navigate("/sign-in");
         }
@@ -81,7 +90,68 @@ const CreateListing = () => {
       geolocation.lng = longitude;
       location = address;
     }
+    //store Images in firebase
+    const storeImage = async (image) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage();
+        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
+        const storageRef = ref(storage, "images/" + fileName);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+              default:
+                break;
+            }
+          },
+          (error) => {
+            reject(error);
+          },
+          () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL);
+            });
+          }
+        );
+      });
+    };
+
+    const imgUrls = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch(() => {
+      setLoading(false);
+      toast.error("Images not uploaded");
+    });
+
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+
+    formDataCopy.location = address;
+    delete formDataCopy.images;
+    delete formDataCopy.address;
+   
+
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
+    toast.success("Listing saved");
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
   const onMutate = (e) => {
@@ -96,7 +166,7 @@ const CreateListing = () => {
 
     //Files
     if (e.target.files) {
-      setFormdata((prevState) => ({
+      setformData((prevState) => ({
         ...prevState,
         images: e.target.files,
       }));
@@ -104,7 +174,7 @@ const CreateListing = () => {
 
     //Text/Booleans/Numbers
     if (!e.target.files) {
-      setFormdata((prevState) => ({
+      setformData((prevState) => ({
         ...prevState,
         [e.target.id]: boolean ?? e.target.value,
       }));
