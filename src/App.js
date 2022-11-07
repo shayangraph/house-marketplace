@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Listing from "./pages/Listing";
 
 const App = () => {
   return (
@@ -28,6 +29,10 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/create-listing" element={<CreateListing />} />
+          <Route
+            path="/category/:categoryName/:listingId"
+            element={<Listing />}
+          />
         </Routes>
         <Navbar />
       </Router>
