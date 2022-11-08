@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   collection,
@@ -23,10 +23,10 @@ const Category = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        //get refrence
+        // Get reference
         const listingsRef = collection(db, "listings");
 
-        //create a query
+        // Create a query
         const q = query(
           listingsRef,
           where("type", "==", params.categoryName),
@@ -34,20 +34,25 @@ const Category = () => {
           limit(10)
         );
 
-        //Excuted query
+        // Execute query
         const querySnap = await getDocs(q);
 
         const listings = [];
+
         querySnap.forEach((doc) => {
-          return listings.push({ id: doc.id, data: doc.data() });
+          return listings.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
 
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error("could not fetch data");
+        toast.error("Could not fetch listings");
       }
     };
+
     fetchListings();
   }, [params.categoryName]);
 
@@ -67,18 +72,20 @@ const Category = () => {
         <>
           <main>
             <ul className="categoryListings">
-              {listings.map((listing) => {
+              {listings.map((listing) => (
                 <ListingItem
                   listing={listing.data}
                   id={listing.id}
                   key={listing.id}
-                />;
-              })}
+                />
+              ))}
             </ul>
           </main>
+          <br />
+          <br />
         </>
       ) : (
-        <p>No Listings for {params.categoryName}</p>
+        <p>No listings for {params.categoryName}</p>
       )}
     </div>
   );
