@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { getDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../firebase.config";
@@ -87,7 +88,11 @@ const Listing = () => {
           <li>{listing.furnished && "Furnished"}</li>
         </ul>
         <p className="listingLocationTitle">Location</p>
-        {/* Map */}
+
+        <div className="leafletContainer">
+          {/* error Map */}
+        </div>
+
         {auth.currentUser?.uid !== listing.userRef && (
           <Link
             to={`/contact/${listing.userRef}?listingName=${listing.name}`}
