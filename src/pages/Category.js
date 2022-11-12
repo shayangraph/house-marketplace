@@ -37,7 +37,7 @@ const Category = () => {
         // Execute query
         const querySnap = await getDocs(q);
 
-        const listings = [];
+        let listings = [];
 
         querySnap.forEach((doc) => {
           return listings.push({
