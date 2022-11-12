@@ -10,8 +10,8 @@ import Offers from "./pages/Offers";
 import Category from "./pages/Category";
 import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
+import SignIn from "./pages/Signin";
+import SignUp from "./pages/Signup";
 import Listing from "./pages/Listing";
 import Contact from "./pages/Contact";
 
