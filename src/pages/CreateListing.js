@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 const CreateListing = () => {
+  //eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setformData] = useState({
@@ -146,7 +147,6 @@ const CreateListing = () => {
     formDataCopy.location = address;
     delete formDataCopy.images;
     delete formDataCopy.address;
-   
 
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);

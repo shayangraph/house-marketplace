@@ -57,7 +57,7 @@ function Offers() {
     fetchListings()
   }, [])
 
-  // Pagination / Load More
+  //  gination / Load More
   const onFetchMoreListings = async () => {
     try {
       // Get reference
