@@ -10,10 +10,11 @@ import Offers from "./pages/Offers";
 import Category from "./pages/Category";
 import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
-import SignIn from "./pages/Signin";
-import SignUp from "./pages/Signup";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import Listing from "./pages/Listing";
 import Contact from "./pages/Contact";
+import EditListing from "./pages/EditListing";
 
 const App = () => {
   return (
@@ -30,11 +31,12 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/create-listing" element={<CreateListing />} />
           <Route
             path="/category/:categoryName/:listingId"
             element={<Listing />}
           />
-          <Route path="/contact/:landlordId" element={<Contact />} />
+          <Route path="/edit-listing/:listingId" element={<EditListing />} />
         </Routes>
         <Navbar />
       </Router>
